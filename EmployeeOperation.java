@@ -120,4 +120,22 @@ public class EmployeeOperation {
         return count;
 
     }
+    public void addEmployeeThreads(Connection con ,List<Employee> emp_list) {
+        emp_list.forEach(emp ->{
+            Runnable task = () -> {
+                try {
+                    this.insertDataToEmployeeDB(con,emp.getName(), emp.getGender(), emp.getSalary(), emp.getDate(), emp.getActive());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            };
+            Thread thread =  new Thread(task);
+            thread.start();
+        });
+        try{
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
